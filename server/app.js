@@ -3,8 +3,8 @@ const app = express();
 const port = 3000;
 
 // Import routes
-const indexRouter = require("./routes/chat");
-const usersRouter = require("./routes/user");
+const indexRouter = require("./src/routes/chat");
+const usersRouter = require("./src/routes/user");
 
 // Middleware
 app.use(express.json());
