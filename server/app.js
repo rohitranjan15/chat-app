@@ -1,13 +1,19 @@
 const express = require("express");
+const http = require("http");
+const socketIo = require("socket.io");
 const app = express();
 const port = 3000;
 
-//import the db connection
+// Import the db connection
 const db = require("./global/config");
 
 // Import routes
 const indexRouter = require("./src/routes/chat");
 const usersRouter = require("./src/routes/user");
+
+// Create HTTP server and integrate Socket.io
+const server = http.createServer(app);
+const io = socketIo(server);
 
 // Middleware
 app.use(express.json());
@@ -26,6 +32,9 @@ app.use((error, req, res, next) => {
   });
 });
 
-app.listen(port, () => {
+// Import and use Socket.io handlers
+require("./src/sockets/chatSocket")(io);
+
+server.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
