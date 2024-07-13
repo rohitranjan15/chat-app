@@ -2,6 +2,9 @@ const express = require("express");
 const app = express();
 const port = 3000;
 
+//import the db connection
+const db = require("./global/config");
+
 // Import routes
 const indexRouter = require("./src/routes/chat");
 const usersRouter = require("./src/routes/user");
