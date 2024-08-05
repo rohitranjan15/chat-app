@@ -2,7 +2,9 @@ const express = require("express");
 const http = require("http");
 const socketIo = require("socket.io");
 const app = express();
-const port = 3000;
+require("dotenv").config();
+
+const port = process.env.PORT || 3000;
 
 // Import the db connection
 const db = require("./global/config");
