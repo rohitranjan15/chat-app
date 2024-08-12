@@ -1,7 +1,9 @@
 const db = require("../../global/config");
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const bcrypt = require("bcryptjs");
+const SECRET_KEY = process.env.SECRET_KEY;
 
 const loginHandler = async (request, res) => {
   try {
@@ -23,11 +25,9 @@ const loginHandler = async (request, res) => {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    const token = jwt.sign(
-      { id: user.id, username: user.username },
-      "your_jwt_secret",
-      { expiresIn: "1h" }
-    );
+    const token = jwt.sign({ id: user.user_id }, SECRET_KEY, {
+      expiresIn: "1h",
+    });
 
     await db.query("UPDATE user SET access_token = ? WHERE user_id = ?", [
       token,
