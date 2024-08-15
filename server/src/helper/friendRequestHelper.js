@@ -45,7 +45,7 @@ class friendRequestHelper {
   async updateFriendRequest(requestId, status) {
     try {
       const sqlQuery = `UPDATE friend_request SET status = ? WHERE friend_request_id = ?`;
-      await db.query(sqlQuery, [requestId, status]);
+      await db.query(sqlQuery, [status, requestId]);
       return;
     } catch (err) {
       throw err;

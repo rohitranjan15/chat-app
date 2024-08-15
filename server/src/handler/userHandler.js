@@ -7,9 +7,11 @@ const bcrypt = require("bcryptjs");
 const SECRET_KEY = process.env.SECRET_KEY;
 
 const UserHelperLib = require("../helper/userHelper");
+const FriendHelperLib = require("../helper/friendHelper");
 const FriendRequestHelperLib = require("../helper/friendRequestHelper");
 
 const userHelperLib = new UserHelperLib();
+const friendHelperLib = new FriendHelperLib();
 const friendRequestHelperLib = new FriendRequestHelperLib();
 
 const loginHandler = async (request, res) => {
@@ -112,6 +114,13 @@ const friendRequestHandler = async (req, res) => {
 
     //update friend request
     await friendRequestHelperLib.updateFriendRequest( req.request_id, req.status );
+
+    if (req.status == constants.FRIEND_REQUEST_ACCEPTED) {
+      await friendHelperLib.createFriend(
+        req.id,
+        friendRequestData.sender_id
+      );
+    }
 
     return res.status(200).json({ message: "Success" });
   } catch (error) {
