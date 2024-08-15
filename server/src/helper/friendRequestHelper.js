@@ -27,6 +27,30 @@ class friendRequestHelper {
       throw err;
     }
   }
+
+  async getFriendRequestDetailsbasedOnRequestId(requestId, receiverId) {
+    try {
+      const sqlQuery = `SELECT * FROM friend_request WHERE friend_request_id = ? AND receiver_id = ? AND status = ?`;
+      const friendRequestData = await db.query(sqlQuery, [
+        requestId,
+        receiverId,
+        constants.FRIEND_REQUEST_PENDING,
+      ]);
+      return friendRequestData[0][0];
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async updateFriendRequest(requestId, status) {
+    try {
+      const sqlQuery = `UPDATE friend_request SET status = ? WHERE friend_request_id = ?`;
+      await db.query(sqlQuery, [requestId, status]);
+      return;
+    } catch (err) {
+      throw err;
+    }
+  }
 }
 
 module.exports = friendRequestHelper;

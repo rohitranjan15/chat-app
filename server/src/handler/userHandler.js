@@ -101,8 +101,27 @@ const sendRequestHandler = async (req, res) => {
   }
 };
 
+const friendRequestHandler = async (req, res) => {
+  try {
+    //check whether the friend request is already sent or not
+    const friendRequestData =
+      await friendRequestHelperLib.getFriendRequestDetailsbasedOnRequestId( req.request_id, req.id );
+    if (!friendRequestData) {
+      return res.status(400).json({ message: "Friend request does not exist" });
+    }
+
+    //update friend request
+    await friendRequestHelperLib.updateFriendRequest( req.request_id, req.status );
+
+    return res.status(200).json({ message: "Success" });
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   loginHandler,
   signupHandler,
   sendRequestHandler,
+  friendRequestHandler,
 };

@@ -3,11 +3,17 @@ const router = express.Router();
 
 const { validateSchema } = require("../utility/validator");
 const { validateUserAccessToken } = require("./../middleware/middleware");
-const { login, signup, sendRequest } = require("../schema/userSchema");
+const {
+  login,
+  signup,
+  sendRequest,
+  friendRequest,
+} = require("../schema/userSchema");
 const {
   loginHandler,
   signupHandler,
   sendRequestHandler,
+  friendRequestHandler,
 } = require("../handler/userHandler");
 
 router.get("/", (req, res) => {
@@ -51,5 +57,22 @@ router.post("/sendRequest", validateUserAccessToken, async (req, res) => {
       .json({ error: err.details ? err.details[0].message : err.message });
   }
 });
+
+router.put(
+  "/friendRequest/:request_id",
+  validateUserAccessToken,
+  async (req, res) => {
+    try {
+      req.body.request_id = req.params.request_id;
+      await validateSchema(friendRequest, req.body);
+      const response = await friendRequestHandler(req.body, res);
+      return response;
+    } catch (err) {
+      res
+        .status(400)
+        .json({ error: err.details ? err.details[0].message : err.message });
+    }
+  }
+);
 
 module.exports = router; // Ensure that we export the router instance

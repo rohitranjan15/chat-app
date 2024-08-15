@@ -16,4 +16,10 @@ const sendRequest = Joi.object({
   user_id: Joi.number().required(),
 });
 
-module.exports = { login, signup, sendRequest };
+const friendRequest = Joi.object({
+  id: Joi.number().required(),
+  request_id: Joi.number().required(),
+  status: Joi.number().valid(1,2).required(),
+});
+
+module.exports = { login, signup, sendRequest, friendRequest };
