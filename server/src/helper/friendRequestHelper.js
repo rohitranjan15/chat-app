@@ -4,7 +4,7 @@ const constants = require("../../global/constants");
 class friendRequestHelper {
   async getFriendRequestDetails(userId, friendId) {
     try {
-      const sqlQuery = `SELECT * FROM friend_request WHERE status = ? AND (user_id = ? AND friend_id = ?) OR (user_id = ? AND friend_id = ?)`;
+      const sqlQuery = `SELECT * FROM friend_request WHERE status = ? AND (sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?)`;
       const friendRequestData = await db.query(sqlQuery, [
         constants.FRIEND_REQUEST_PENDING,
         userId,
@@ -20,7 +20,7 @@ class friendRequestHelper {
 
   async sendFriendRequest(userId, friendId) {
     try {
-      const sqlQuery = `INSERT INTO friend_request(user_id, friend_id) VALUES (?, ?)`;
+      const sqlQuery = `INSERT INTO friend_request(sender_id, receiver_id) VALUES (?, ?)`;
       await db.query(sqlQuery, [userId, friendId]);
       return;
     } catch (err) {
