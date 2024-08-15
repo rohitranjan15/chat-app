@@ -40,4 +40,16 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.post("/sendRequest", validateUserAccessToken, async (req, res) => {
+  try {
+    await validateSchema(sendRequest, req.body);
+    const response = await sendRequestHandler(req.body, res);
+    return response;
+  } catch (err) {
+    res
+      .status(400)
+      .json({ error: err.details ? err.details[0].message : err.message });
+  }
+});
+
 module.exports = router; // Ensure that we export the router instance

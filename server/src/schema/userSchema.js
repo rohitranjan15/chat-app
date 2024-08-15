@@ -11,4 +11,9 @@ const signup = Joi.object({
   password: Joi.string().min(6).required(),
 });
 
-module.exports = { login, signup };
+const sendRequest = Joi.object({
+  id: Joi.number().required(),
+  user_id: Joi.number().required(),
+});
+
+module.exports = { login, signup, sendRequest };
