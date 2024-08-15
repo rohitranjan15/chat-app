@@ -2,8 +2,13 @@ const express = require("express");
 const router = express.Router();
 
 const { validateSchema } = require("../utility/validator");
-const { login, signup } = require("../schema/userSchema");
-const { loginHandler, signupHandler } = require("../handler/userHandler");
+const { validateUserAccessToken } = require("./../middleware/middleware");
+const { login, signup, sendRequest } = require("../schema/userSchema");
+const {
+  loginHandler,
+  signupHandler,
+  sendRequestHandler,
+} = require("../handler/userHandler");
 
 router.get("/", (req, res) => {
   res.send("User home page");

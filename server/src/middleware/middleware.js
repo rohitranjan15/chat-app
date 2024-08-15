@@ -20,7 +20,7 @@ const validateUserAccessToken = async (req, res, next) => {
       }
 
       // If token is valid, save decoded info to request for use in other routes
-      req.user = decoded;
+      req.body.id = decoded.id;
       next();
     });
   } catch (err) {
