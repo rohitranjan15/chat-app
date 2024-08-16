@@ -51,6 +51,19 @@ class friendRequestHelper {
       throw err;
     }
   }
+
+  async getFriendRequestList(userId) {
+    try {
+      const sqlQuery = `SELECT fr.*, u.username FROM friend_request fr JOIN user u ON  fr.receiver_id = u.user_id WHERE fr.receiver_id = ? AND fr.status = ?`;
+      const friendRequestList = await db.query(sqlQuery, [
+        userId,
+        constants.FRIEND_REQUEST_PENDING,
+      ]);
+      return friendRequestList[0];
+    } catch (err) {
+      throw err;
+    }
+  }
 }
 
 module.exports = friendRequestHelper;

@@ -34,9 +34,7 @@ const loginHandler = async (request, res) => {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    const token = jwt.sign({ id: user.user_id }, SECRET_KEY, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign({ id: user.user_id }, SECRET_KEY);
 
     await db.query("UPDATE user SET access_token = ? WHERE user_id = ?", [
       token,
@@ -128,9 +126,26 @@ const friendRequestHandler = async (req, res) => {
   }
 };
 
+const getFriendRequestHandler = async (req, res) => {
+  try {
+    const friendRequestList = await friendRequestHelperLib.getFriendRequestList(
+      req.id
+    );
+    return res.status(200).json({
+      message: "Success",
+      data: {
+        friend_request_list: friendRequestList,
+      },
+    });
+  } catch (err) {
+    throw err;
+  }
+};
+
 module.exports = {
   loginHandler,
   signupHandler,
   sendRequestHandler,
   friendRequestHandler,
+  getFriendRequestHandler,
 };
