@@ -4,7 +4,7 @@ const router = express.Router();
 const { validateSchema } = require("../utility/validator");
 const { validateUserAccessToken } = require("./../middleware/middleware");
 const { login, signup, sendRequest, friendRequest} = require("../schema/userSchema");
-const { loginHandler, signupHandler, sendRequestHandler, friendRequestHandler, getFriendRequestHandler} = require("../handler/userHandler");
+const { loginHandler, signupHandler, sendRequestHandler, friendRequestHandler, getFriendRequestHandler, getFriendHandler} = require("../handler/userHandler");
 
 router.get("/", (req, res) => {
   res.send("User home page");
@@ -68,6 +68,17 @@ router.put(
 router.get("/friendRequest", validateUserAccessToken, async (req, res) => {
   try {
     const response = await getFriendRequestHandler(req.body, res);
+    return response;
+  } catch (err) {
+    res
+      .status(400)
+      .json({ error: err.details ? err.details[0].message : err.message });
+  }
+});
+
+router.get("/friends", validateUserAccessToken, async (req, res) => {
+  try {
+    const response = await getFriendHandler(req.body, res);
     return response;
   } catch (err) {
     res

@@ -142,10 +142,29 @@ const getFriendRequestHandler = async (req, res) => {
   }
 };
 
+const getFriendHandler = async (req, res) => {
+  try {
+    const friendList = await friendHelperLib.getFriendList(req.id);
+    const friendIds = friendList.map((friend) => {
+      return friend.friend_id;
+    });
+
+    const friendData = await userHelperLib.getUserBasedOnIds(friendIds);
+    return res.status(200).json({
+      message: "Success",
+      data: {
+        friend_list: friendData,
+      },
+    });
+  } catch (err) {
+    throw err;
+  }
+};
 module.exports = {
   loginHandler,
   signupHandler,
   sendRequestHandler,
   friendRequestHandler,
   getFriendRequestHandler,
+  getFriendHandler,
 };

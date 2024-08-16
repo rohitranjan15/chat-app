@@ -10,6 +10,16 @@ class helper {
       throw err;
     }
   }
+
+  async getUserBasedOnIds(userIds) {
+    try {
+      const query = `SELECT user_id, username FROM user WHERE user_id IN (?)`;
+      const userList = await db.query(query, [userIds]);
+      return userList[0];
+    } catch (err) {
+      throw err;
+    }
+  }
 }
 
 module.exports = helper;
