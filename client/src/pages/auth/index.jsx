@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Background from "../../assets/login2.png";
 import Victory from "../../assets/victory.svg";
 import {
@@ -12,56 +13,82 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 import { toast } from "sonner";
+import { apiClient } from "@/lib/api-client";
+import { SIGNUP, LOGIN } from "@/utils/constants";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const navigate = useNavigate();
 
-
-  const validateSignup = ()=>{
-    if(!email.length) {
+  const validateSignup = () => {
+    if (!email.length) {
       toast.error("Email is required.");
-      return false
+      return false;
     }
-    if(!password.length) {
+    if (!password.length) {
       toast.error("Password is required.");
       return false;
     }
-    if(!confirmPassword.length) {
+    if (!confirmPassword.length) {
       toast.error("Confirm password is required.");
       return false;
     }
-    if(password!==confirmPassword) {
+    if (password !== confirmPassword) {
       toast.error("Password and confirm password should be same.");
       return false;
     }
     return true;
-  }
+  };
 
   const validateLogin = () => {
-    if(!email.length) {
+    if (!email.length) {
       toast.error("Email is required.");
-      return false
+      return false;
     }
-    if(!password.length) {
+    if (!password.length) {
       toast.error("Password is required.");
       return false;
     }
     return true;
-  }
-
-  const handleLogin = () => {
-    if(validateLogin()) {
-      alert("done")
-    }
   };
 
-  const handleSignup = () => {
-    if(validateSignup()) {
-      alert("done")
+  const handleLogin = async() => {
+    if (validateLogin()) {
+      const response = await apiClient.post(
+        LOGIN,
+        {  email: email, password: password },
+        { withCredentials: true }
+      );
+      if(response.status === 200) {
+        navigate('/chat')
+      }
+     }
+  };
+
+  const handleSignup = async () => {
+    if (validateSignup()) {
+      try {
+        const response = await apiClient.post(
+          SIGNUP,
+          { name: "test", email: email, password: password },
+          { withCredentials: true }
+        );
+  
+        if (response.status === 200) {
+          navigate('/profile');
+        } 
+        else {
+          navigate('/signup')
+        }
+        
+      } catch (error) {
+        console.log(error.message);
+      }
     }
   };
+  
 
   return (
     <div className="h-[100vh] w-[100vh] flex items-center justify-center">
@@ -77,7 +104,7 @@ const Auth = () => {
             </p>
           </div>
           <div className="flex items-center justify-center w-full">
-            <Tabs className="w-3/4">
+            <Tabs className="w-3/4" defaultValue="login">
               <TabsList className="bg-transparent rounded-none w-full">
                 <TabsTrigger
                   value="login"
